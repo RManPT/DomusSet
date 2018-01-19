@@ -176,7 +176,7 @@ end
 
 %%
     disp("All done!");
-    logger("All files", 
+    %logger("All files", 
     allfiles = af;
     varcl = {'User_feelings', 'User_perceptions', 'allfiles', 'user_f', 'user_p','sensorfiles','Sensors_data','feedback_dump'};
     clearvars('-except',varcl{:});
