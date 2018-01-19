@@ -34,16 +34,16 @@ if exist("domusdata.mat","file") == 2
     rerun=0;
     disp("File found, loading...");
     load("domusdata");
-    fprintf("DONE!\n");
     if ~isequal(af,allfiles) 
         rerun=1; 
         fprintf("WARNING New dataset detected!\n");
     end;
 end
 
-
+if rerun
     disp("This is a very slow process, please be patient.");    
     %checks if there is already a variable     
+end
     if exist("User_perceptions",'var') == 0
         fprintf("\nExtracting User Perceptions!");
         dump=[];
@@ -176,6 +176,7 @@ end
 
 %%
     disp("All done!");
+    logger("All files", 
     allfiles = af;
     varcl = {'User_feelings', 'User_perceptions', 'allfiles', 'user_f', 'user_p','sensorfiles','Sensors_data','feedback_dump'};
     clearvars('-except',varcl{:});

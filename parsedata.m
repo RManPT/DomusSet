@@ -93,35 +93,7 @@ e = doubleSortUnique(Sensors_data,2);
 %     row_idx = (contains(Sensors_clean_data(:, 1), lower(Temperature(2) )));
 %     w2=[w2; Sensors_clean_data(row_idx,3) Sensors_clean_data(row_idx,4)];  
 % 
-%     
-
-
-
-%%
-readings_dump = [];
-fields = fieldnames(User_feelings)
-for i = 1:numel(fields)
-    z = repmat((fields{i}),size(User_feelings.(fields{i}).x));
-    out = [User_feelings.(fields{i}).x User_feelings.(fields{i}).Var1 User_feelings.(fields{i}).Var2 z]
-  readings_dump = [readings_dump; out];
-end
-fields = fieldnames(User_perceptions)
-for i = 1:numel(User_perceptions)
-    z = repmat((fields{i}),size(User_perceptions.(fields{i}).x));
-    out = [User_perceptions.(fields{i}).x User_perceptions.(fields{i}).Var1 User_perceptions.(fields{i}).Var2 z]
-  readings_dump = [readings_dump; out];
-end
-readings_dump = sortrows(readings_dump,2);
-
-
-
-
-
-
-
-
-
-
+%    
 
 %% Getting first and last feedbacks from each experiment to determin start and end times
 % d = sortrows([Temperature_feelings;Humidity_feelings;Luminosity_feelings],2);
