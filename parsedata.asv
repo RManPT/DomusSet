@@ -142,7 +142,8 @@ function [out]=parseData(data_source,exp_times,third)
        t2=exp_times(row_idx,:)
        
        
-        start = str2double(t2(1,4))+floor((str2double(t2(1,5))-floor(str2double(t2(1,4))/3))*third)
+% str2double(t2(1,5))-floor(str2double(t2(1,4))/3*third)
+%        start = str2double(t2(1,4))+floor((str2double(t2(1,5))-floor(str2double(t2(1,4))/3))*third)
     end
     out=t;
 end
