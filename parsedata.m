@@ -121,10 +121,16 @@ e = doubleSortUnique(Sensors_data,2);
 % % end    
 
 %% plot sensor
-
-
-
-
+            [row_idx, ~] = find(feedback_dump(:, 1) == "22");
+            info=feedback_dump(row_idx,:); 
+%             e = unique( info(:,2));
+            [C,ia,ic] = unique(info(:,2),'rows')
+            info = info(ia,:)
+            names1 = datestr(datetime(str2double(info(:,2))/1000, 'ConvertFrom', 'posixtime'));
+            names2 = info(:,4);
+z=[];
+% v = @(info) [info(:,1) extractBefore(info(:,2), 12)+"00" info(:,3) info(:,4)];
+%  out=v(info)names
 %%
 
 % for i=1:size(w,1)
@@ -148,7 +154,7 @@ e = doubleSortUnique(Sensors_data,2);
 
 varcl = {'User_feelings', 'User_perceptions', 'allfiles', 'user_f', 'user_p','sensorfiles','Sensors_data', 'Sensors_info', 'readings_dump', 'z'...
          'Temperature_data', 'Temperature_feelings', 'Humidity_data', 'Humidity_feelings', 'Luminosity_data', 'Luminosity_feelings','d','exp_times'};
-clearvars('-except',varcl{:});
+% clearvars('-except',varcl{:});
 
 %% Auxiliary functions
 
