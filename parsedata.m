@@ -62,6 +62,7 @@ Luminosity_feelings = removeSensor(Luminosity_feelings,1,exper);
 Global_perception = [];
 Thermal_perception = [];
 Lighting_perception = [];
+
 Global_perception = extractFeelings(User_perceptions.GlobalComfort);  
 Thermal_perception = extractFeelings(User_perceptions.ThermalComfort);  
 Lighting_perception = extractFeelings(User_perceptions.LightingComfort); 
@@ -75,16 +76,52 @@ Lighting_perception = removeSensor(Lighting_perception,1,exper);
 d = sortrows([Temperature_feelings;Humidity_feelings;Luminosity_feelings;Global_perception;Thermal_perception;Lighting_perception],2);
 exp_times=getExperimentTimes(d,1,2);
 
-%% Extract first third of Temperature reads for each experiment (Office)
-e = doubleSortUnique(Sensors_data,2);
+%% Extract batches of Temperature reads for each experiment (Office/Bedroom/Kitchen)
+TDparsed1 = parseData(Temperature_data,exp_times,1);
+TDparsed2 = parseData(Temperature_data,exp_times,2);
+TDparsed3 = parseData(Temperature_data,exp_times,3);
 
-%% Extract first third of Humidity reads for each experiment (Office)
-parsed = parseData(Humidity_data,exp_times,1);
+%% Extract batches of Humidity reads for each experiment (Office/Bedroom/Kitchen)
+HDparsed1 = parseData(Humidity_data,exp_times,1);
+HDparsed2 = parseData(Humidity_data,exp_times,2);
+HDparsed3 = parseData(Humidity_data,exp_times,3);
 
+%% Extract batches of Luminosity reads for each experiment (Office/Bedroom/Kitchen)
+LDparsed1 = parseData(Luminosity_data,exp_times,1);
+LDparsed2 = parseData(Luminosity_data,exp_times,2);
+LDparsed3 = parseData(Luminosity_data,exp_times,3);
 
-%% Extract first third of Luminosity reads for each experiment (Office)
-e = doubleSortUnique(Sensors_data,2);
+% repensar divisoes do apart
 
+%% Extract batches of Temperature feelings for each experiment (Office/Bedroom/Kitchen)
+TFparsed1 = parseData(Temperature_feelings,exp_times,1);
+TFparsed2 = parseData(Temperature_feelings,exp_times,2);
+TFparsed3 = parseData(Temperature_feelings,exp_times,3);
+
+%% Extract batches of Humidity feelings for each experiment (Office/Bedroom/Kitchen)
+HFparsed1 = parseData(Humidity_feelings,exp_times,1);
+HFparsed2 = parseData(Humidity_feelings,exp_times,2);
+HFparsed3 = parseData(Humidity_feelings,exp_times,3);
+
+%% Extract batches of Luminosity feelings for each experiment (Office/Bedroom/Kitchen)
+LFparsed1 = parseData(Luminosity_feelings,exp_times,1);
+LFparsed2 = parseData(Luminosity_feelings,exp_times,2);
+LFparsed3 = parseData(Luminosity_feelings,exp_times,3);
+
+%% Extract batches of Temperature perception for each experiment (Office/Bedroom/Kitchen)
+TPparsed1 = parseData(Thermal_perception,exp_times,1);
+TPparsed2 = parseData(Thermal_perception,exp_times,2);
+TPparsed3 = parseData(Thermal_perception,exp_times,3);
+
+%% Extract batches of Luminosity perception for each experiment (Office/Bedroom/Kitchen)
+LPparsed1 = parseData(Lighting_perception,exp_times,1);
+LPparsed2 = parseData(Lighting_perception,exp_times,2);
+LPparsed3 = parseData(Lighting_perception,exp_times,3);
+
+%% Extract batches of Global Comfort perception for each experiment (Office/Bedroom/Kitchen)
+GPparsed1 = parseData(Global_perception,exp_times,1);
+GPparsed2 = parseData(Global_perception,exp_times,2);
+GPparsed3 = parseData(Global_perception,exp_times,3);
 
 %% Getting first and last feedbacks from each experiment to determin start and end times
 % d = sortrows([Temperature_feelings;Humidity_feelings;Luminosity_feelings],2);
@@ -133,18 +170,24 @@ varcl = {'User_feelings', 'User_perceptions', 'allfiles', 'user_f', 'user_p','se
 function [out]=parseData(data_source,exp_times,third)
     %extract unique experiments
     e = unique( data_source(:,1));
-    t=[];
+    t=[]; w=[];
     for i=1:size(e,1)
        [row_idx, ~] = find(data_source(:, 1) == e(i));
        t=data_source(row_idx,:);
-       
        [row_idx, ~] = find(exp_times(:, 1) == e(i));
-       t2=exp_times(row_idx,:)
+       t2=exp_times(row_idx,:); 
+       ini_exp = str2double(t2(1,4));
+       fim_exp = str2double(t2(1,5));
+       batch=(fim_exp-ini_exp)/3;
+       start_time = ini_exp+batch*(third-1);
+       end_time = ini_exp+batch*(third);
+       x = t(str2double(t(:,2)) >= start_time & str2double(t(:,2)) <= end_time,:);
+       z = string(ones(size(x,1),1)*str2double(e(i)));
        
+       w=[w; z x];
        
-        start = str2double(t2(1,4))+floor((str2double(t2(1,5))-floor(str2double(t2(1,4))/3))*third)
     end
-    out=t;
+    out=w;
 end
 
 % function to remove every item on "what" from "from_name"
