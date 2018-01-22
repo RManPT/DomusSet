@@ -1,2 +1,2 @@
 
-accuracy=traindata(1,'On')
+accuracy=traindata(3,'On')
