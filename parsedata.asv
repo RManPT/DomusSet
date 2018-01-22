@@ -21,9 +21,9 @@ exper = ["9" "24" "4" "5" "8" "1"];
 
 
 %% get info on relevant sensors
-% Sensors_info =readtable('relevant_sensors.csv', 'FileType', 'text', 'Delimiter', ';', 'ReadVariableNames', 0,...
-%     'ReadRowNames', 0,'Format','%s%s%s%s', 'FileEncoding','UTF-8');
-%  Sensors_info = table2array(Sensors_info);
+Sensors_info =readtable('relevant_sensors.csv', 'FileType', 'text', 'Delimiter', ';', 'ReadVariableNames', 0,...
+    'ReadRowNames', 0,'Format','%s%s%s%s', 'FileEncoding','UTF-8');
+ Sensors_info = table2array(Sensors_info);
 
 %% associate sensors with location, feelings and perceptions
 Office_Temperature = ["FFFE9DA3A50A"];

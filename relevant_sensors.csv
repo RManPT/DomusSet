@@ -1,0 +1,59 @@
+L1;Dimmed - Ceiling lamp;Kitchen;FFFE2B37EAB9
+L2 – L2 bis;Dimmed - Spot;Kitchen;FFFECBB299A8
+L3;Dimmed - Ceiling lamp;Bathroom;FFFEB88797BC
+SP5 – SP6;Dimmed - Spots;Bedroom;FFFEA4ACFDCC
+SP7 – SP8;Dimmed - Spots;Bedroom;FFFEF9EF7D48
+PCV1 – PCV1 bis;Dimmed - Bedside lamp;Bedroom;FFFEB6A85DBB
+SP1 – SP2;Dimmed - Spots;Office;FFFEDC6CAA6A
+SP3 – SP4;Dimmed - Spots;Office;FFFE8CC9BAD0
+PCV2;Dimmed - Table lamp;Office;FFFEFB6453C9
+VR1;Shutters;Kitchen;FFFE63C3A7B2
+VR2;Shutters;Bathroom;FFFE61DC66BA
+VR3;Shutters;Bedroom;FFFEC7396CB7
+VR4;Shutters;Bedroom;FFFEC659B23D
+VR5;Shutters;Office;FFFEABB51ACA
+VR6;Shutters;Office;FFFED50B88C7
+ST1;Blinds;Kitchen;FFFEA8BCF469
+ST2;Blinds;Office;FFFEAEDCCB67
+ST3;Blinds;Office;FFFE8BB9CA7C
+CU1;Curtains;Bedroom;FFFE3B6E8D53
+P1;IR Presence detector;Kitchen;FFFECC84D66B
+P2;IR Presence detector;Bedroom;FFFE9992F78D
+P1 (Luminosity);Luminosity sensor;Kitchen;FFFE48CA9395
+P2 (Luminosity);Luminosity sensor;Bedroom;FFFE659CDFB3
+RGB 1;RGB Channel;Office;FFFE9BCA9F35
+RGB 2;RGB Channel;Office;FFFEC74B3569
+RGB 3;RGB Channel;Office;FFFEACD9A33A
+RGB 4;RGB Channel;Office;FFFE89BC9AC6
+RGB 5;RGB Channel;Office;FFFEAB7B7789
+RGB 6;RGB Channel;Office;FFFE6B19CAC9
+RGB 7;RGB Channel;Office;FFFEAEBA8E63
+RGB 8;RGB Channel;Office;FFFE3A67D3AE
+RGB 9;RGB Channel;Bedroom;FFFE99ADB766
+RGB 10;RGB Channel;Bedroom;FFFE1BDBACA9
+RGB 11;RGB Channel;Bedroom;FFFE99B7AAA5
+RGB 12;RGB Channel;Bedroom;FFFE3E9AA48C
+RGB 13;RGB Channel;Bedroom;FFFE71ABCAA8
+RGB 14;RGB Channel;Bedroom;FFFEB6A3F733
+RGB 15;RGB Channel;Bedroom;FFFE81A935AE
+RGB 16;RGB Channel;Bedroom;FFFE36AAEB3B
+RGB 17;RGB Channel;Bedroom;FFFE8ABBAF66
+RGB 18;RGB Channel;Kitchen (wall);FFFE4A5973B6
+RGB 19;RGB Channel;Kitchen (wall);FFFE630D5969
+RGB 20;RGB Channel;Kitchen (wall);FFFECA72567D
+RGB 21;RGB Channel;Kitchen (wall);FFFE88CD5944
+RGB 22;RGB Channel;Kitchen (wall);FFFEBB5D967F
+RGB 23;RGB Channel;Kitchen (wall);FFFEEED7339C
+RGB 24;RGB Channel;Kitchen (table);FFFEADCAC66B
+RGB 25;RGB Channel;Kitchen (table);FFFEDA4B7B9D
+RGB 26;RGB Channel;Kitchen (table);FFFEACDCBABA
+ZP 1;Audio Renderer device;Office;FFFE1432ADAA
+ZP 2;Audio Renderer device;Bedroom;FFFEC2A9ABBA
+ZP 3;Audio Renderer device;Kitchen;FFFE9B398B4B
+TV 1;Audio/Video Renderer device;Bedroom;FFFE7A8B0DA9
+Temperature;Temperature;Office;FFFE9DA3A50A
+Temperature;Temperature;Bedroom;FFFEB8A8CCBB
+CO2 concentration;CO2 concentration;Bedroom;FFFE97678AAD
+Relative humidity;Relative humidity;Bedroom;FFFE3CE1BCAA
+
+
