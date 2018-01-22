@@ -39,7 +39,7 @@ Office_Luminosity = ["FFFEDC6CAA6A" "FFFE8CC9BAD0"];
 
 %% Extract only relevant sensors
 Office_Temperature_data = [];
-Bedroom_data_Temperature_data = [];
+Bedroom_Temperature_data = [];
 Kitchen_Temperature_data = [];
 
 Humidity_data = [];
@@ -93,9 +93,11 @@ Global_perception = removeSensor(Global_perception,1,exper);
 Thermal_perception = removeSensor(Thermal_perception,1,exper);
 Lighting_perception = removeSensor(Lighting_perception,1,exper);
 
+
 %% Getting first and last feedbacks from each experiment to determin start and end times
 d = sortrows([Temperature_feelings;Humidity_feelings;Luminosity_feelings;Global_perception;Thermal_perception;Lighting_perception],2);
 exp_times=getExperimentTimes(d,1,2);
+
 
 %% Extract batches of Temperature feelings for each experiment (Office/Bedroom/Kitchen)
 TFparsed1 = parseData(Temperature_feelings,exp_times,1);
@@ -148,6 +150,9 @@ Kitchen_Temperature_data = [B(B(:,3)>B(:,6),1:3); B(B(:,3)<B(:,6),4:6)];
 Kitchen_Temperature_data = sortrows(Kitchen_Temperature_data,2);
 TFparsed3 = sortrows(TFparsed3,2);
 
+TPparsed1 = sortrows(TPparsed1,2);
+TPparsed2 = sortrows(TPparsed2,2);
+TPparsed3 = sortrows(TPparsed3,2);
 
 %% Prepare luminosity data
 Office_Luminosity_data1 = sortrows(Office_Luminosity_data1,2); 
@@ -158,6 +163,15 @@ Office_Luminosity_data2 = sortrows(Office_Luminosity_data2,2);
 Bedroom_Luminosity_data2 = sortrows(Bedroom_Luminosity_data2,2);
 Kitchen_Luminosity_data2 = sortrows(Kitchen_Luminosity_data2,2);
 
+
+LFparsed1 = sortrows(LFparsed1,2);
+LFparsed2 = sortrows(LFparsed2,2);
+LFparsed3 = sortrows(LFparsed3,2);
+
+
+LPparsed1 = sortrows(LPparsed1,2);
+LPparsed2 = sortrows(LPparsed2,2);
+LPparsed3 = sortrows(LPparsed3,2);
 % x1=str2double(Office_Luminosity_data1(:,1:3));
 % y1=str2double(Bedroom_Luminosity_data1(:,1:3));
 % z1=str2double(Kitchen_Luminosity_data1(:,1:3));
@@ -174,6 +188,11 @@ Kitchen_Luminosity_data2 = sortrows(Kitchen_Luminosity_data2,2);
 % zz2 = [Office_Luminosity_data1(Q2,:) Bedroom_Luminosity_data1(W2,:) Kitchen_Luminosity_data1(E2,:)];
 % B=arrayfun(@string,zz2);
 
+%% Prepare global data
+GPparsed1 = sortrows(GPparsed1,2);
+GPparsed2 = sortrows(GPparsed2,2);
+GPparsed3 = sortrows(GPparsed3,2);
+
 
 %% remove experiments from sensor dump
 Office_Temperature_data = removeSensor(Office_Temperature_data,1,exper);
@@ -189,6 +208,7 @@ Kitchen_Luminosity_data1 = removeSensor(Kitchen_Luminosity_data1,1,exper);
 Office_Luminosity_data2 = removeSensor(Office_Luminosity_data2,1,exper);
 Bedroom_Luminosity_data2 = removeSensor(Bedroom_Luminosity_data2,1,exper);
 Kitchen_Luminosity_data2 = removeSensor(Kitchen_Luminosity_data2,1,exper);
+
 
 % Luminosity_data = removeSensor(Luminosity_data,1,exper);
 
@@ -213,13 +233,13 @@ for i=1:size(TFparsed3,1)
     Ytemp=[Ytemp; TFparsed3(i,3)];
 end
 
-Xtemp2=[]; Ytemp2=[]; 
-Z=[Office_Temperature_data;Bedroom_Temperature_data];
-  for i=1:size(Temperature_feelings,1)
-    [min_val,ii]=min(abs(str2double(Z(:,2))-str2double(Temperature_feelings(i,2))));
-    Xtemp2=[Xtemp2; Z(ii,3)];
-    Ytemp2=[Ytemp2; Temperature_feelings(i,3)];
-  end
+% Xtemp2=[]; Ytemp2=[]; 
+% Z=[Office_Temperature_data;Bedroom_Temperature_data];
+%   for i=1:size(Temperature_feelings,1)
+%     [min_val,ii]=min(abs(str2double(Z(:,2))-str2double(Temperature_feelings(i,2))));
+%     Xtemp2=[Xtemp2; Z(ii,3)];
+%     Ytemp2=[Ytemp2; Temperature_feelings(i,3)];
+%   end
 %% prepare SVM vector for Humidity
   Xhumi=[]; Yhumi=[];
   for i=1:size(Humidity_feelings,1)
@@ -228,9 +248,9 @@ Z=[Office_Temperature_data;Bedroom_Temperature_data];
     Yhumi=[Yhumi; Humidity_feelings(i,3)];
   end
 
-    %% padding classes
+    %% padding classes Temperature
     [Xtemp_padded,Ytemp_padded] = padding(Xtemp,Ytemp);
-    [Xtemp2_padded,Ytemp2_padded] = padding(Xtemp2,Ytemp2);
+%     [Xtemp2_padded,Ytemp2_padded] = padding(Xtemp2,Ytemp2);
 
 %% prepare SVM vector for Lighting
 
@@ -268,20 +288,163 @@ end
 %     Ytemp2=[Ytemp2; Temperature_feelings(i,3)];
 %   end
 
-    %% padding classes
+    %% padding classes Luminosity
     [c1,Ylum_padded] = padding(Xlum(:,1),Ylum);
     [c2,Ylum_padded] = padding(Xlum(:,2),Ylum);
     Xlum_padded = [c1 c2];
 %     [Xtemp2_padded,Ytemp2_padded] = padding(Xtemp2,Ylum2);
 
+%% prepare SVM vector for Thermal Comfort
 
+%Office
+Xther=[]; Yther=[]; 
+for i=1:size(TPparsed1,1)
+    [min_val,ii]=min(abs(str2double(Office_Temperature_data(:,2))-str2double(TPparsed1(i,2))));
+    [min_val,iii]=min(abs(str2double(Bedroom_Temperature_data(:,2))-str2double(TPparsed1(i,2))));
+    Xther=[Xther; Office_Temperature_data(ii,3) Bedroom_Temperature_data(iii,3)];
+    Yther=[Yther; TPparsed1(i,3)];
+end
+%Bedroom
+for i=1:size(TPparsed2,1)
+   [min_val,ii]=min(abs(str2double(Office_Temperature_data(:,2))-str2double(TPparsed2(i,2))));
+    [min_val,iii]=min(abs(str2double(Bedroom_Temperature_data(:,2))-str2double(TPparsed2(i,2))));
+    Xther=[Xther; Office_Temperature_data(ii,3) Bedroom_Temperature_data(iii,3)];
+    Yther=[Yther; TPparsed2(i,3)];
+end
+%Kitchen
+for i=1:size(TPparsed3,1)
+    [min_val,ii]=min(abs(str2double(Office_Temperature_data(:,2))-str2double(TPparsed3(i,2))));
+    [min_val,iii]=min(abs(str2double(Bedroom_Temperature_data(:,2))-str2double(TPparsed3(i,2))));
+    Xther=[Xther; Office_Temperature_data(ii,3) Bedroom_Temperature_data(iii,3)];
+    Yther=[Yther; TPparsed3(i,3)];
+end
+
+%% padding classes Thermal
+    [d1,Yther_padded] = padding(Xther(:,1),Yther);
+    [d2,Yther_padded] = padding(Xther(:,2),Yther);
+    Xther_padded = [d1 d2];
+
+%% prepare SVM vector for Lighting Comfort
+
+%Office
+Xlig=[]; Ylig=[]; 
+for i=1:size(TPparsed1,1)
+    [min_val,ii]=min(abs(str2double(Office_Luminosity_data1(:,2))-str2double(TPparsed1(i,2))));
+    [min_val,iii]=min(abs(str2double(Office_Luminosity_data2(:,2))-str2double(TPparsed1(i,2))));
+    [min_val,iiii]=min(abs(str2double(Bedroom_Luminosity_data1(:,2))-str2double(TPparsed1(i,2))));
+    [min_val,iiiii]=min(abs(str2double(Bedroom_Luminosity_data2(:,2))-str2double(TPparsed1(i,2))));
+    [min_val,iiiiii]=min(abs(str2double(Kitchen_Luminosity_data1(:,2))-str2double(TPparsed1(i,2))));
+    [min_val,iiiiiii]=min(abs(str2double(Kitchen_Luminosity_data2(:,2))-str2double(TPparsed1(i,2))));
+    Xlig=[Xlig; Office_Luminosity_data1(ii,3) Office_Luminosity_data2(iii,3) Bedroom_Luminosity_data1(iiii,3) Bedroom_Luminosity_data2(iiiii,3) Kitchen_Luminosity_data1(iiiiii,3) Kitchen_Luminosity_data2(iiiiiii,3)];
+    Ylig=[Ylig; TPparsed1(i,3)];
+end
+%Bedroom
+for i=1:size(TPparsed2,1)
+   [min_val,ii]=min(abs(str2double(Office_Luminosity_data1(:,2))-str2double(TPparsed2(i,2))));
+    [min_val,iii]=min(abs(str2double(Office_Luminosity_data2(:,2))-str2double(TPparsed2(i,2))));
+    [min_val,iiii]=min(abs(str2double(Bedroom_Luminosity_data1(:,2))-str2double(TPparsed2(i,2))));
+    [min_val,iiiii]=min(abs(str2double(Bedroom_Luminosity_data2(:,2))-str2double(TPparsed2(i,2))));
+    [min_val,iiiiii]=min(abs(str2double(Kitchen_Luminosity_data1(:,2))-str2double(TPparsed2(i,2))));
+    [min_val,iiiiiii]=min(abs(str2double(Kitchen_Luminosity_data2(:,2))-str2double(TPparsed2(i,2))));
+    Xlig=[Xlig; Office_Luminosity_data1(ii,3) Office_Luminosity_data2(iii,3) Bedroom_Luminosity_data1(iiii,3) Bedroom_Luminosity_data2(iiiii,3) Kitchen_Luminosity_data1(iiiiii,3) Kitchen_Luminosity_data2(iiiiiii,3)];
+    Ylig=[Ylig; TPparsed2(i,3)];
+end
+%Kitchen
+for i=1:size(TPparsed3,1)
+    [min_val,ii]=min(abs(str2double(Office_Luminosity_data1(:,2))-str2double(TPparsed3(i,2))));
+    [min_val,iii]=min(abs(str2double(Office_Luminosity_data2(:,2))-str2double(TPparsed3(i,2))));
+    [min_val,iiii]=min(abs(str2double(Bedroom_Luminosity_data1(:,2))-str2double(TPparsed3(i,2))));
+    [min_val,iiiii]=min(abs(str2double(Bedroom_Luminosity_data2(:,2))-str2double(TPparsed3(i,2))));
+    [min_val,iiiiii]=min(abs(str2double(Kitchen_Luminosity_data1(:,2))-str2double(TPparsed3(i,2))));
+    [min_val,iiiiiii]=min(abs(str2double(Kitchen_Luminosity_data2(:,2))-str2double(TPparsed3(i,2))));
+    Xlig=[Xlig; Office_Luminosity_data1(ii,3) Office_Luminosity_data2(iii,3) Bedroom_Luminosity_data1(iiii,3) Bedroom_Luminosity_data2(iiiii,3) Kitchen_Luminosity_data1(iiiiii,3) Kitchen_Luminosity_data2(iiiiiii,3)];
+    Ylig=[Ylig; TPparsed3(i,3)];
+end
+
+%% padding classes Lighting
+    [f1,Ylig_padded] = padding(Xlig(:,1),Ylig);
+    [f2,Ylig_padded] = padding(Xlig(:,2),Ylig);
+    [f3,Ylig_padded] = padding(Xlig(:,3),Ylig);
+    [f4,Ylig_padded] = padding(Xlig(:,4),Ylig);
+    [f5,Ylig_padded] = padding(Xlig(:,5),Ylig);
+    [f6,Ylig_padded] = padding(Xlig(:,6),Ylig);
+    Xlig_padded = [f1 f2 f3 f4 f5 f6];
+
+%% prepare SVM vector for Global Comfort
+
+%Office
+Xglo=[]; Yglo=[]; 
+for i=1:size(GPparsed1,1)
+    [min_val,ii]=min(abs(str2double(Office_Luminosity_data1(:,2))-str2double(GPparsed1(i,2))));
+    [min_val,iii]=min(abs(str2double(Office_Luminosity_data2(:,2))-str2double(GPparsed1(i,2))));
+    [min_val,iiii]=min(abs(str2double(Bedroom_Luminosity_data1(:,2))-str2double(GPparsed1(i,2))));
+    [min_val,iiiii]=min(abs(str2double(Bedroom_Luminosity_data2(:,2))-str2double(GPparsed1(i,2))));
+    [min_val,iiiiii]=min(abs(str2double(Kitchen_Luminosity_data1(:,2))-str2double(GPparsed1(i,2))));
+    [min_val,iiiiiii]=min(abs(str2double(Kitchen_Luminosity_data2(:,2))-str2double(GPparsed1(i,2))));
+
+    [min_val,x]=min(abs(str2double(Office_Temperature_data(:,2))-str2double(GPparsed1(i,2))));
+    [min_val,xx]=min(abs(str2double(Bedroom_Temperature_data(:,2))-str2double(GPparsed1(i,2))));
+    [min_val,xxx]=min(abs(str2double(Kitchen_Temperature_data(:,2))-str2double(GPparsed1(i,2))));
+    [min_val,xxxx]=min(abs(str2double(Humidity_data(:,2))-str2double(GPparsed1(i,2))));
+
+    Xglo=[Xglo; Office_Luminosity_data1(ii,3) Office_Luminosity_data2(iii,3) Bedroom_Luminosity_data1(iiii,3) Bedroom_Luminosity_data2(iiiii,3) Kitchen_Luminosity_data1(iiiiii,3) Kitchen_Luminosity_data2(iiiiiii,3) Office_Temperature_data(x,3) Bedroom_Temperature_data(xx,3) Kitchen_Temperature_data(xxx,3) Humidity_data(xxxx,3)];
+    Yglo=[Yglo; GPparsed1(i,3)];
+end
+%Bedroom
+for i=1:size(GPparsed2,1)
+   [min_val,ii]=min(abs(str2double(Office_Luminosity_data1(:,2))-str2double(GPparsed2(i,2))));
+    [min_val,iii]=min(abs(str2double(Office_Luminosity_data2(:,2))-str2double(GPparsed2(i,2))));
+    [min_val,iiii]=min(abs(str2double(Bedroom_Luminosity_data1(:,2))-str2double(GPparsed2(i,2))));
+    [min_val,iiiii]=min(abs(str2double(Bedroom_Luminosity_data2(:,2))-str2double(GPparsed2(i,2))));
+    [min_val,iiiiii]=min(abs(str2double(Kitchen_Luminosity_data1(:,2))-str2double(GPparsed2(i,2))));
+    [min_val,iiiiiii]=min(abs(str2double(Kitchen_Luminosity_data2(:,2))-str2double(GPparsed2(i,2))));
+
+    [min_val,x]=min(abs(str2double(Office_Temperature_data(:,2))-str2double(GPparsed2(i,2))));
+    [min_val,xx]=min(abs(str2double(Bedroom_Temperature_data(:,2))-str2double(GPparsed2(i,2))));
+    [min_val,xxx]=min(abs(str2double(Kitchen_Temperature_data(:,2))-str2double(GPparsed2(i,2))));
+    [min_val,xxxx]=min(abs(str2double(Humidity_data(:,2))-str2double(GPparsed2(i,2))));
+
+    Xglo=[Xglo; Office_Luminosity_data1(ii,3) Office_Luminosity_data2(iii,3) Bedroom_Luminosity_data1(iiii,3) Bedroom_Luminosity_data2(iiiii,3) Kitchen_Luminosity_data1(iiiiii,3) Kitchen_Luminosity_data2(iiiiiii,3) Office_Temperature_data(x,3) Bedroom_Temperature_data(xx,3) Kitchen_Temperature_data(xxx,3) Humidity_data(xxxx,3)];
+    Yglo=[Yglo; GPparsed2(i,3)];
+end
+%Kitchen
+for i=1:size(GPparsed3,1)
+    [min_val,ii]=min(abs(str2double(Office_Luminosity_data1(:,2))-str2double(GPparsed3(i,2))));
+    [min_val,iii]=min(abs(str2double(Office_Luminosity_data2(:,2))-str2double(GPparsed3(i,2))));
+    [min_val,iiii]=min(abs(str2double(Bedroom_Luminosity_data1(:,2))-str2double(GPparsed3(i,2))));
+    [min_val,iiiii]=min(abs(str2double(Bedroom_Luminosity_data2(:,2))-str2double(GPparsed3(i,2))));
+    [min_val,iiiiii]=min(abs(str2double(Kitchen_Luminosity_data1(:,2))-str2double(GPparsed3(i,2))));
+    [min_val,iiiiiii]=min(abs(str2double(Kitchen_Luminosity_data2(:,2))-str2double(GPparsed3(i,2))));
+
+    [min_val,x]=min(abs(str2double(Office_Temperature_data(:,2))-str2double(GPparsed3(i,2))));
+    [min_val,xx]=min(abs(str2double(Bedroom_Temperature_data(:,2))-str2double(GPparsed3(i,2))));
+    [min_val,xxx]=min(abs(str2double(Kitchen_Temperature_data(:,2))-str2double(GPparsed3(i,2))));
+    [min_val,xxxx]=min(abs(str2double(Humidity_data(:,2))-str2double(GPparsed3(i,2))));
+
+    Xglo=[Xglo; Office_Luminosity_data1(ii,3) Office_Luminosity_data2(iii,3) Bedroom_Luminosity_data1(iiii,3) Bedroom_Luminosity_data2(iiiii,3) Kitchen_Luminosity_data1(iiiiii,3) Kitchen_Luminosity_data2(iiiiiii,3) Office_Temperature_data(x,3) Bedroom_Temperature_data(xx,3) Kitchen_Temperature_data(xxx,3) Humidity_data(xxxx,3)];
+    Yglo=[Yglo; GPparsed3(i,3)];
+end
+
+%% padding classes Global
+    [g1,Yglo_padded] = padding(Xglo(:,1),Yglo);
+    [g2,Yglo_padded] = padding(Xglo(:,2),Yglo);
+    [g3,Yglo_padded] = padding(Xglo(:,3),Yglo);
+    [g4,Yglo_padded] = padding(Xglo(:,4),Yglo);
+    [g5,Yglo_padded] = padding(Xglo(:,5),Yglo);
+    [g6,Yglo_padded] = padding(Xglo(:,6),Yglo);
+    [g7,Yglo_padded] = padding(Xglo(:,7),Yglo);
+    [g8,Yglo_padded] = padding(Xglo(:,8),Yglo);
+    [g9,Yglo_padded] = padding(Xglo(:,9),Yglo);
+    [g10,Yglo_padded] = padding(Xglo(:,10),Yglo);
+    Xglo_padded = [g1 g2 g3 g4 g5 g6 g7 g8 g9 g10];
 %% clean and save
 
-varcl = {'User_feelings', 'User_perceptions', 'allfiles', 'user_f', 'user_p','sensorfiles','Sensors_data', 'Sensors_info', 'readings_dump', 'z'...
-         'Temperature_data', 'Temperature_feelings', 'Humidity_data', 'Humidity_feelings', 'Luminosity_data', 'Luminosity_feelings','d','exp_times'};
-% clearvars('-except',varcl{:});
+varcl = {'User_feelings', 'User_perceptions', 'allfiles', 'user_f', 'user_p','sensorfiles','Sensors_data', 'Sensors_info','feedback_dump', ...
+         'Xglo', 'Xglo_padded', 'Xhumi', 'Xlig', 'Xlig_padded', 'Xlum', 'Xlum_padded','Xtemp','Xtemp_padded','Xther','Xther_padded',...
+         'Yglo', 'Yglo_padded', 'Yhumi', 'Ylig', 'Ylig_padded', 'Ylum', 'Ylum_padded','Ytemp','Ytemp_padded','Yther','Yther_padded'};
+clearvars('-except',varcl{:});
 
-save parseddata;
+save domusdata;
 
 %% Auxiliary functions
 
@@ -334,7 +497,6 @@ function [out]=extractFeelings(feelings)
      out = [feelings.x feelings.Var1 feelings.Var2] ;
 end
 
-
 %% Extracts and returns experiments start and end times (Julian)
 % data_source : array with Sensors data
 % exp_idx : experiment column index
@@ -365,7 +527,14 @@ function [Xtemp,Ytemp]=padding(Xtemp,Ytemp)
     c=[]; v=[];
     for i=1:10
         c=[c; i double(length(Xtemp(find(Ytemp==string(i)))))];
-        v=[v; double(mean(double(Xtemp(find(Ytemp==string(i)))))) ];
+        b = double(mean(double(Xtemp(find(Ytemp==string(i))))));
+        if isnan(b) 
+            if i<10 b=double(min(double(Xtemp(find(Ytemp==string(i+1)))))); 
+            else
+                i=double(max(double(Xtemp(find(Ytemp==string(i-1))))));
+            end
+        end
+        v=[v; b]; 
     end
     c=[c v];
     c1 = max(c(:,2))-c(:,2);
